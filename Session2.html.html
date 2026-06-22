@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Linear Regression Teaching</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+    color:white;
+    overflow-x:hidden;
+}
+
+header{
+    text-align:center;
+    padding:50px 20px;
+    animation:fadeIn 2s ease;
+}
+
+header h1{
+    font-size:55px;
+    margin-bottom:15px;
+    text-shadow:0 0 20px rgba(255,255,255,0.4);
+}
+
+header p{
+    font-size:22px;
+    opacity:0.9;
+}
+
+.container{
+    width:90%;
+    margin:auto;
+    padding-bottom:50px;
+}
+
+.card{
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:25px;
+    padding:30px;
+    margin-bottom:35px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.3);
+    animation:slideUp 1s ease;
+    transition:0.4s;
+}
+
+.card:hover{
+    transform:translateY(-8px) scale(1.01);
+}
+
+.card h2{
+    color:#facc15;
+    margin-bottom:20px;
+    font-size:35px;
+}
+
+.card p, li{
+    font-size:19px;
+    line-height:1.9;
+}
+
+.highlight{
+    margin-top:20px;
+    background:linear-gradient(90deg,#2563eb,#7c3aed);
+    padding:18px;
+    border-radius:15px;
+    font-size:20px;
+    animation:pulse 2s infinite;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+    overflow:hidden;
+    border-radius:15px;
+}
+
+th{
+    background:#facc15;
+    color:#111827;
+    padding:15px;
+    font-size:18px;
+}
+
+ td{
+    background:rgba(255,255,255,0.1);
+    padding:14px;
+    text-align:center;
+    border-bottom:1px solid rgba(255,255,255,0.2);
+ }
+
+ tr:hover td{
+    background:rgba(255,255,255,0.2);
+ }
+
+.graph-box{
+    width:100%;
+    height:450px;
+    background:white;
+    border-radius:20px;
+    margin-top:30px;
+    position:relative;
+    overflow:hidden;
+}
+
+.x-axis{
+    position:absolute;
+    bottom:50px;
+    left:50px;
+    width:80%;
+    height:4px;
+    background:black;
+}
+
+.y-axis{
+    position:absolute;
+    bottom:50px;
+    left:50px;
+    width:4px;
+    height:75%;
+    background:black;
+}
+
+.point{
+    width:18px;
+    height:18px;
+    background:red;
+    border-radius:50%;
+    position:absolute;
+    animation:bounce 2s infinite;
+}
+
+.p1{ bottom:90px; left:110px; }
+.p2{ bottom:140px; left:190px; }
+.p3{ bottom:190px; left:270px; }
+.p4{ bottom:250px; left:360px; }
+.p5{ bottom:320px; left:450px; }
+
+.regression-line{
+    position:absolute;
+    width:420px;
+    height:5px;
+    background:blue;
+    bottom:100px;
+    left:95px;
+    transform:rotate(-32deg);
+    transform-origin:left center;
+    animation:drawLine 4s ease forwards;
+}
+
+.label-x{
+    position:absolute;
+    bottom:10px;
+    left:50%;
+    color:black;
+    font-weight:bold;
+}
+
+.label-y{
+    position:absolute;
+    top:45%;
+    left:5px;
+    transform:rotate(-90deg);
+    color:black;
+    font-weight:bold;
+}
+
+.step{
+    margin-bottom:20px;
+    padding:18px;
+    background:rgba(255,255,255,0.08);
+    border-left:6px solid #facc15;
+    border-radius:12px;
+}
+
+.formula{
+    margin-top:20px;
+    text-align:center;
+    font-size:34px;
+    color:#facc15;
+    font-weight:bold;
+}
+
+.animate-btn{
+    background:linear-gradient(90deg,#facc15,#fb7185);
+    color:#111827;
+    border:none;
+    padding:15px 28px;
+    border-radius:12px;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:20px;
+    transition:0.3s;
+}
+
+.animate-btn:hover{
+    transform:scale(1.05);
+}
+
+.dynamic-point{
+    width:18px;
+    height:18px;
+    background:red;
+    border-radius:50%;
+    position:absolute;
+    animation:pop 0.5s ease;
+}
+
+.dynamic-line{
+    position:absolute;
+    height:5px;
+    background:blue;
+    bottom:100px;
+    left:95px;
+    transform-origin:left center;
+    border-radius:10px;
+    transition:all 1s ease;
+}
+
+@keyframes pop{
+    0%{
+        transform:scale(0);
+    }
+    100%{
+        transform:scale(1);
+    }
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    background:#020617;
+    font-size:18px;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+@keyframes slideUp{
+    from{
+        transform:translateY(50px);
+        opacity:0;
+    }
+    to{
+        transform:translateY(0);
+        opacity:1;
+    }
+}
+
+@keyframes bounce{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.3);}
+    100%{transform:scale(1);}
+}
+
+@keyframes pulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.02);}
+    100%{transform:scale(1);}
+}
+
+@keyframes drawLine{
+    from{
+        width:0;
+    }
+    to{
+        width:420px;
+    }
+}
+
+.step-box{
+    margin-top:30px;
+}
+
+.animated-step{
+    background:rgba(255,255,255,0.1);
+    padding:18px;
+    border-radius:14px;
+    margin-bottom:15px;
+    border-left:6px solid #facc15;
+    font-size:20px;
+    opacity:0;
+    transform:translateX(-50px);
+    animation:showStep 1s forwards;
+}
+
+.step1{ animation-delay:1s; }
+.step2{ animation-delay:3s; }
+.step3{ animation-delay:5s; }
+.step4{ animation-delay:7s; }
+.step5{ animation-delay:9s; }
+.step6{ animation-delay:11s; }
+
+@keyframes showStep{
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+
+@media(max-width:768px){
+    header h1{
+        font-size:36px;
+    }
+
+    .card h2{
+        font-size:28px;
+    }
+
+    .formula{
+        font-size:24px;
+    }
+
+    .graph-box{
+        height:350px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Simple Linear Regression</h1>
+    <p>Step-by-Step Teaching Page with Animated Graph</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+    <h2>What is Simple Linear Regression?</h2>
+
+    <p>
+        Simple Linear Regression हा एक Supervised Machine Learning Algorithm आहे.
+        हा algorithm दोन variables मधील relationship शोधतो.
+    </p>
+
+    <div class="highlight">
+        Example: Study Hours वाढले तर Marks वाढतात.
+    </div>
+</div>
+
+<div class="card">
+    <h2>Real Life Example</h2>
+
+    <table>
+        <tr>
+            <th>Study Hours (X)</th>
+            <th>Marks (Y)</th>
+        </tr>
+
+        <tr>
+            <td>1</td>
+            <td>35</td>
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td>45</td>
+        </tr>
+
+        <tr>
+            <td>3</td>
+            <td>52</td>
+        </tr>
+
+        <tr>
+            <td>4</td>
+            <td>65</td>
+        </tr>
+
+        <tr>
+            <td>5</td>
+            <td>75</td>
+        </tr>
+    </table>
+
+    <div class="highlight">
+        X = Independent Variable <br>
+        Y = Dependent Variable
+    </div>
+</div>
+
+<div class="card">
+    <h2>Simple Linear Regression Formula</h2>
+
+    <div class="formula">
+        Y = mX + c
+    </div>
+
+    <ul style="margin-top:25px; padding-left:25px;">
+        <li><strong>Y</strong> → Predicted Output</li>
+        <li><strong>X</strong> → Input Variable</li>
+        <li><strong>m</strong> → Slope</li>
+        <li><strong>c</strong> → Intercept</li>
+    </ul>
+
+    <div class="highlight">
+        Slope आणि Intercept हे Linear Regression चे सर्वात important parts आहेत.
+    </div>
+</div>
+
+<div class="card">
+    <h2>What is Slope (m)?</h2>
+
+    <p>
+        Slope म्हणजे X मध्ये change झाला तर Y किती बदलतो हे दाखवतो.
+    </p>
+
+    <div class="formula">
+        m = Change in Y / Change in X
+    </div>
+
+    <table>
+        <tr>
+            <th>Study Hours</th>
+            <th>Marks</th>
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td>45</td>
+        </tr>
+
+        <tr>
+            <td>4</td>
+            <td>65</td>
+        </tr>
+    </table>
+
+    <div class="highlight">
+        Change in Y = 65 - 45 = 20 <br>
+        Change in X = 4 - 2 = 2 <br><br>
+
+        m = 20 / 2 = 10
+        <br><br>
+        Meaning: प्रत्येक 1 hour study वाढल्यावर marks 10 ने वाढतात.
+    </div>
+</div>
+
+<div class="card">
+    <h2>What is Intercept (c)?</h2>
+
+    <p>
+        Intercept म्हणजे X = 0 असताना Y ची value काय असेल.
+    </p>
+
+    <div class="highlight">
+        Example:<br>
+        जर student ने 0 hours study केले तरी model काही base marks दाखवू शकतो.
+    </div>
+
+    <div class="formula">
+        Y = 10X + 25
+    </div>
+
+    <div class="highlight">
+        येथे c = 25 आहे.<br><br>
+        म्हणजे X = 0 असताना predicted marks = 25
+    </div>
+</div>
+
+<div class="card">
+    <h2>Step-by-Step Formula Working Animation</h2>
+
+    <div class="step-box">
+        <div class="animated-step step1">
+            Step 1: Formula घेतो → Y = mX + c
+        </div>
+
+        <div class="animated-step step2">
+            Step 2: m = 10 आणि c = 25 घेतो
+        </div>
+
+        <div class="animated-step step3">
+            Step 3: X = 5 hours study
+        </div>
+
+        <div class="animated-step step4">
+            Step 4: Y = 10(5) + 25
+        </div>
+
+        <div class="animated-step step5">
+            Step 5: Y = 50 + 25
+        </div>
+
+        <div class="animated-step step6">
+            Final Answer: Y = 75 Marks
+        </div>
+    </div>
+
+    <div class="highlight">
+        Model predict करतो की student ला 75 marks मिळू शकतात.
+    </div>
+</div>
+
+<div class="card">
+    <h2>Interactive Animated Regression Graph</h2>
+
+    <p>
+        खालील button वर click केल्यावर data points एक-एक करून graph वर add होतील.
+        प्रत्येक नवीन point add झाल्यावर regression line update होईल.
+    </p>
+
+    <button onclick="startAnimation()" class="animate-btn">
+        Start Graph Animation
+    </button>
+
+    <div class="graph-box">
+
+        <div class="x-axis"></div>
+        <div class="y-axis"></div>
+
+        <div id="line" class="dynamic-line"></div>
+
+        <div class="label-x">Study Hours (X)</div>
+        <div class="label-y">Marks (Y)</div>
+
+    </div>
+
+    <div class="highlight">
+        Step-by-step graph building students ला regression visually समजण्यासाठी मदत करतो.
+    </div>
+</div>
+
+    <div class="highlight">
+        Red dots = Actual Data Points <br>
+        Blue line = Best Fit Regression Line
+    </div>
+</div>
+
+<div class="card">
+    <h2>Prediction Example</h2>
+
+    <p>
+        जर student 6 hours study करत असेल तर model अंदाजे 85 marks predict करू शकतो.
+    </p>
+
+    <div class="highlight">
+        Regression future numeric values predict करतो.
+    </div>
+</div>
+
+<div class="card">
+    <h2>Applications of Linear Regression</h2>
+
+    <ul style="padding-left:25px; margin-top:20px;">
+        <li>House Price Prediction</li>
+        <li>Salary Prediction</li>
+        <li>Stock Market Prediction</li>
+        <li>Sales Forecasting</li>
+        <li>Weather Forecasting</li>
+        <li>Student Marks Prediction</li>
+    </ul>
+</div>
+
+<div class="card">
+    <h2>Advantages</h2>
+
+    <ul style="padding-left:25px; margin-top:20px;">
+        <li>Simple and Easy</li>
+        <li>Fast Training</li>
+        <li>Easy to Understand</li>
+        <li>Best for Numeric Prediction</li>
+    </ul>
+</div>
+
+<div class="card">
+    <h2>Important Interview Questions</h2>
+
+    <ol style="padding-left:25px; margin-top:20px;">
+        <li>What is Linear Regression?</li>
+        <li>Difference between X and Y variables?</li>
+        <li>What is Best Fit Line?</li>
+        <li>What is Slope?</li>
+        <li>What type of problem Regression solves?</li>
+    </ol>
+</div>
+
+</div>
+
+<footer>
+    Created for Data Science & ML Classroom Teaching
+</footer>
+
+<script>
+
+const graphBox = document.querySelector('.graph-box');
+const line = document.getElementById('line');
+
+const points = [
+    {x:110, y:90},
+    {x:190, y:140},
+    {x:270, y:190},
+    {x:360, y:250},
+    {x:450, y:320}
+];
+
+function startAnimation(){
+
+    document.querySelectorAll('.dynamic-point').forEach(p => p.remove());
+
+    line.style.width = '0px';
+
+    points.forEach((point,index)=>{
+
+        setTimeout(()=>{
+
+            const dot = document.createElement('div');
+            dot.classList.add('dynamic-point');
+
+            dot.style.left = point.x + 'px';
+            dot.style.bottom = point.y + 'px';
+
+            graphBox.appendChild(dot);
+
+            updateLine(index);
+
+        },index * 1500);
+
+    });
+}
+
+function updateLine(index){
+
+    if(index === 0){
+        line.style.width = '60px';
+        line.style.transform = 'rotate(-10deg)';
+    }
+    else if(index === 1){
+        line.style.width = '140px';
+        line.style.transform = 'rotate(-18deg)';
+    }
+    else if(index === 2){
+        line.style.width = '220px';
+        line.style.transform = 'rotate(-24deg)';
+    }
+    else if(index === 3){
+        line.style.width = '320px';
+        line.style.transform = 'rotate(-29deg)';
+    }
+    else if(index === 4){
+        line.style.width = '420px';
+        line.style.transform = 'rotate(-32deg)';
+    }
+}
+
+</script>
+
+</body>
+</html>

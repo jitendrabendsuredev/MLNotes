@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multiple Linear Regression Teaching</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#020617,#1e3a8a,#7c3aed);
+    color:white;
+    overflow-x:hidden;
+}
+
+header{
+    text-align:center;
+    padding:50px 20px;
+    animation:fadeIn 2s ease;
+}
+
+header h1{
+    font-size:55px;
+    margin-bottom:15px;
+    color:#facc15;
+}
+
+header p{
+    font-size:22px;
+}
+
+.container{
+    width:92%;
+    margin:auto;
+    padding-bottom:50px;
+}
+
+.card{
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:25px;
+    padding:30px;
+    margin-bottom:35px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.3);
+    animation:slideUp 1s ease;
+    transition:0.4s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+.card h2{
+    color:#facc15;
+    margin-bottom:20px;
+    font-size:34px;
+}
+
+.card p, li{
+    font-size:19px;
+    line-height:1.9;
+}
+
+.highlight{
+    margin-top:20px;
+    background:linear-gradient(90deg,#2563eb,#7c3aed);
+    padding:18px;
+    border-radius:15px;
+    font-size:20px;
+    animation:pulse 2s infinite;
+}
+
+.formula{
+    text-align:center;
+    font-size:36px;
+    color:#facc15;
+    margin-top:20px;
+    font-weight:bold;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+    overflow:hidden;
+    border-radius:15px;
+}
+
+th{
+    background:#facc15;
+    color:#111827;
+    padding:15px;
+}
+
+ td{
+    background:rgba(255,255,255,0.1);
+    padding:14px;
+    text-align:center;
+    border-bottom:1px solid rgba(255,255,255,0.2);
+ }
+
+ tr:hover td{
+    background:rgba(255,255,255,0.2);
+ }
+
+.step{
+    background:rgba(255,255,255,0.08);
+    padding:18px;
+    margin-bottom:15px;
+    border-left:6px solid #facc15;
+    border-radius:12px;
+    animation:showStep 1s ease;
+}
+
+.animation-box{
+    margin-top:30px;
+    background:white;
+    border-radius:20px;
+    height:400px;
+    position:relative;
+    overflow:hidden;
+}
+
+.axis-x{
+    position:absolute;
+    width:80%;
+    height:4px;
+    background:black;
+    bottom:50px;
+    left:60px;
+}
+
+.axis-y{
+    position:absolute;
+    width:4px;
+    height:75%;
+    background:black;
+    left:60px;
+    bottom:50px;
+}
+
+.point{
+    width:18px;
+    height:18px;
+    background:red;
+    border-radius:50%;
+    position:absolute;
+    opacity:0;
+}
+
+.line{
+    position:absolute;
+    height:5px;
+    background:blue;
+    border-radius:10px;
+    width:0;
+    bottom:120px;
+    left:90px;
+    transform:rotate(-25deg);
+    transform-origin:left center;
+    transition:all 1s ease;
+}
+
+.btn{
+    background:linear-gradient(90deg,#facc15,#fb7185);
+    color:#111827;
+    border:none;
+    padding:15px 28px;
+    border-radius:12px;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:20px;
+}
+
+.btn:hover{
+    transform:scale(1.05);
+}
+
+.label{
+    position:absolute;
+    color:black;
+    font-weight:bold;
+}
+
+.label-x{
+    bottom:10px;
+    left:45%;
+}
+
+.label-y{
+    top:45%;
+    left:5px;
+    transform:rotate(-90deg);
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    background:#020617;
+    font-size:18px;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+@keyframes slideUp{
+    from{
+        transform:translateY(50px);
+        opacity:0;
+    }
+    to{
+        transform:translateY(0);
+        opacity:1;
+    }
+}
+
+@keyframes pulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.02);}
+    100%{transform:scale(1);}
+}
+
+@keyframes pop{
+    from{
+        transform:scale(0);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+@media(max-width:768px){
+    header h1{
+        font-size:36px;
+    }
+
+    .card h2{
+        font-size:28px;
+    }
+
+    .formula{
+        font-size:24px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Multiple Linear Regression</h1>
+    <p>Machine Learning Teaching Page with Animation</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+    <h2>What is Multiple Linear Regression?</h2>
+
+    <p>
+        Multiple Linear Regression हा Supervised Machine Learning Algorithm आहे.
+        यात एका output साठी multiple input variables वापरले जातात.
+    </p>
+
+    <div class="highlight">
+        Simple Linear Regression → 1 Input Variable
+        <br><br>
+        Multiple Linear Regression → Multiple Input Variables
+    </div>
+</div>
+
+<div class="card">
+    <h2>Real Life Example</h2>
+
+    <p>
+        Student च्या marks prediction साठी खालील multiple factors वापरले जातात:
+    </p>
+
+    <ul style="padding-left:25px; margin-top:20px;">
+        <li>Study Hours</li>
+        <li>Attendance</li>
+        <li>Assignments Score</li>
+    </ul>
+</div>
+
+<div class="card">
+    <h2>Sample Dataset</h2>
+
+    <table>
+        <tr>
+            <th>Study Hours</th>
+            <th>Attendance %</th>
+            <th>Assignment Score</th>
+            <th>Final Marks</th>
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td>70</td>
+            <td>60</td>
+            <td>55</td>
+        </tr>
+
+        <tr>
+            <td>4</td>
+            <td>80</td>
+            <td>75</td>
+            <td>70</td>
+        </tr>
+
+        <tr>
+            <td>5</td>
+            <td>90</td>
+            <td>88</td>
+            <td>85</td>
+        </tr>
+
+        <tr>
+            <td>6</td>
+            <td>92</td>
+            <td>95</td>
+            <td>93</td>
+        </tr>
+    </table>
+</div>
+
+<div class="card">
+    <h2>Formula</h2>
+
+    <div class="formula">
+        Y = b0 + b1X1 + b2X2 + b3X3
+    </div>
+
+    <ul style="padding-left:25px; margin-top:25px;">
+        <li>Y → Final Output</li>
+        <li>X1 → Study Hours</li>
+        <li>X2 → Attendance</li>
+        <li>X3 → Assignment Score</li>
+        <li>b0 → Intercept</li>
+        <li>b1,b2,b3 → Coefficients</li>
+    </ul>
+</div>
+
+<div class="card">
+    <h2>Step-by-Step Working</h2>
+
+    <div class="step">
+        Step 1: Multiple input variables collect करा
+    </div>
+
+    <div class="step">
+        Step 2: Output variable identify करा
+    </div>
+
+    <div class="step">
+        Step 3: Model relationship learn करतो
+    </div>
+
+    <div class="step">
+        Step 4: Best fit equation तयार होते
+    </div>
+
+    <div class="step">
+        Step 5: Future prediction होते
+    </div>
+</div>
+
+<div class="card">
+    <h2>Formula Calculation Example</h2>
+
+    <div class="formula">
+        Y = 10 + 2X1 + 0.5X2 + 1.5X3
+    </div>
+
+    <div class="highlight">
+        X1 = 5 Hours <br>
+        X2 = 80 Attendance <br>
+        X3 = 70 Assignment Score
+    </div>
+
+    <div class="step">
+        Y = 10 + 2(5) + 0.5(80) + 1.5(70)
+    </div>
+
+    <div class="step">
+        Y = 10 + 10 + 40 + 105
+    </div>
+
+    <div class="step">
+        Final Prediction = 165
+    </div>
+</div>
+
+<div class="card">
+    <h2>Interactive Graph Animation</h2>
+
+    <p>
+        खाली button click केल्यावर data points graph वर add होतील आणि regression line update होईल.
+    </p>
+
+    <button class="btn" onclick="startAnimation()">
+        Start Animation
+    </button>
+
+    <div class="animation-box" id="graph">
+
+        <div class="axis-x"></div>
+        <div class="axis-y"></div>
+
+        <div class="line" id="line"></div>
+
+        <div class="label label-x">Multiple Inputs</div>
+        <div class="label label-y">Final Output</div>
+
+    </div>
+
+    <div class="highlight">
+        प्रत्येक नवीन input combination नंतर prediction line improve होते.
+    </div>
+</div>
+
+<div class="card">
+    <h2>Applications</h2>
+
+    <ul style="padding-left:25px; margin-top:20px;">
+        <li>House Price Prediction</li>
+        <li>Student Performance Analysis</li>
+        <li>Sales Forecasting</li>
+        <li>Medical Risk Prediction</li>
+        <li>Stock Market Analysis</li>
+    </ul>
+</div>
+
+<div class="card">
+    <h2>Advantages</h2>
+
+    <ul style="padding-left:25px; margin-top:20px;">
+        <li>Multiple factors consider करतो</li>
+        <li>Better prediction accuracy</li>
+        <li>Real-world business problems solve करतो</li>
+        <li>Easy interpretation</li>
+    </ul>
+</div>
+
+</div>
+
+<footer>
+    Created for Data Science & Machine Learning Teaching
+</footer>
+
+<script>
+
+const graph = document.getElementById('graph');
+const line = document.getElementById('line');
+
+const points = [
+    {x:120,y:100},
+    {x:200,y:160},
+    {x:300,y:220},
+    {x:420,y:290}
+];
+
+function startAnimation(){
+
+    document.querySelectorAll('.point').forEach(p=>p.remove());
+
+    line.style.width='0px';
+
+    points.forEach((point,index)=>{
+
+        setTimeout(()=>{
+
+            const dot=document.createElement('div');
+            dot.classList.add('point');
+
+            dot.style.left=point.x+'px';
+            dot.style.bottom=point.y+'px';
+            dot.style.opacity='1';
+            dot.style.animation='pop 0.5s ease forwards';
+
+            graph.appendChild(dot);
+
+            updateLine(index);
+
+        },index*1500);
+
+    });
+}
+
+function updateLine(index){
+
+    if(index===0){
+        line.style.width='80px';
+    }
+    else if(index===1){
+        line.style.width='180px';
+    }
+    else if(index===2){
+        line.style.width='300px';
+    }
+    else if(index===3){
+        line.style.width='420px';
+    }
+}
+
+</script>
+
+</body>
+</html>
