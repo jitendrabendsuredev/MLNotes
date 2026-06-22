@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Polynomial Regression Teaching</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      scroll-behavior: smooth;
+      background: #f3f4f6;
+    }
+
+    .fade-in {
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0px);
+      }
+    }
+
+    .card-hover:hover {
+      transform: translateY(-5px);
+      transition: 0.3s;
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="text-gray-800">
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-r from-blue-700 to-indigo-700 text-white p-10 shadow-lg">
+    <div class="max-w-7xl mx-auto text-center fade-in">
+      <h1 class="text-5xl font-bold mb-4">Polynomial Regression</h1>
+      <p class="text-xl">Real Business Problem → Why Linear Fails → Polynomial Solution</p>
+    </div>
+  </section>
+
+  <!-- Business Problem -->
+  <section class="max-w-7xl mx-auto p-8 fade-in">
+    <div class="bg-white rounded-3xl shadow-xl p-8 card-hover">
+      <h2 class="text-4xl font-bold text-blue-700 mb-6">1. Real Business Problem</h2>
+
+      <p class="text-lg leading-8 mb-4">
+        A software company wants to predict employee salary based on experience.
+      </p>
+
+      <div class="bg-blue-100 p-5 rounded-xl mt-4">
+        <h3 class="text-2xl font-semibold mb-3">Business Question</h3>
+        <p class="text-lg">
+          “Can we predict salary growth using employee experience?”
+        </p>
+      </div>
+
+      <div class="mt-8 overflow-x-auto">
+        <table class="w-full border border-gray-300 text-center">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th class="p-4 border">Experience (Years)</th>
+              <th class="p-4 border">Salary (LPA)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="p-3 border">1</td><td class="p-3 border">3</td></tr>
+            <tr><td class="p-3 border">2</td><td class="p-3 border">5</td></tr>
+            <tr><td class="p-3 border">3</td><td class="p-3 border">7</td></tr>
+            <tr><td class="p-3 border">4</td><td class="p-3 border">10</td></tr>
+            <tr><td class="p-3 border">5</td><td class="p-3 border">15</td></tr>
+            <tr><td class="p-3 border">6</td><td class="p-3 border">22</td></tr>
+            <tr><td class="p-3 border">7</td><td class="p-3 border">32</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Linear Regression Fails -->
+  <section class="max-w-7xl mx-auto p-8 fade-in">
+    <div class="bg-white rounded-3xl shadow-xl p-8 card-hover">
+      <h2 class="text-4xl font-bold text-red-600 mb-6">2. Why Simple / Multiple Linear Regression Fails?</h2>
+
+      <div class="grid md:grid-cols-2 gap-8 items-center">
+        <div>
+          <ul class="space-y-4 text-lg leading-8">
+            <li>❌ Linear Regression only creates a straight line.</li>
+            <li>❌ But real-world salary growth is not always straight.</li>
+            <li>❌ After some experience, salary increases very fast.</li>
+            <li>❌ Linear model cannot properly fit curved data.</li>
+            <li>❌ Prediction accuracy becomes low.</li>
+          </ul>
+
+          <div class="bg-red-100 p-5 rounded-xl mt-6 pulse">
+            <h3 class="text-2xl font-bold text-red-700 mb-2">Important Point</h3>
+            <p class="text-lg">
+              Linear Regression = Straight Line
+              <br>
+              Real Data = Curved Relationship
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <canvas id="linearChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solution -->
+  <section class="max-w-7xl mx-auto p-8 fade-in">
+    <div class="bg-white rounded-3xl shadow-xl p-8 card-hover">
+      <h2 class="text-4xl font-bold text-green-700 mb-6">3. Solution → Polynomial Regression</h2>
+
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <p class="text-lg leading-8 mb-4">
+            Polynomial Regression helps us model curved relationships.
+          </p>
+
+          <ul class="space-y-4 text-lg">
+            <li>✅ Handles non-linear data</li>
+            <li>✅ Better prediction accuracy</li>
+            <li>✅ Creates curve fitting</li>
+            <li>✅ Works well for growth patterns</li>
+            <li>✅ Used in business forecasting</li>
+          </ul>
+
+          <div class="bg-green-100 mt-6 p-5 rounded-xl">
+            <h3 class="text-2xl font-bold text-green-700 mb-2">Polynomial Formula</h3>
+            <p class="text-xl font-semibold">
+              y = b0 + b1x + b2x² + b3x³
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <canvas id="polyChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What is Polynomial Regression -->
+  <section class="max-w-7xl mx-auto p-8 fade-in">
+    <div class="bg-white rounded-3xl shadow-xl p-8">
+      <h2 class="text-4xl font-bold text-indigo-700 mb-8">4. What is Polynomial Regression?</h2>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-indigo-50 p-6 rounded-2xl shadow-md">
+          <h3 class="text-2xl font-bold mb-4">Definition</h3>
+          <p class="text-lg leading-8">
+            Polynomial Regression is a machine learning algorithm used when data has a curved relationship.
+          </p>
+        </div>
+
+        <div class="bg-blue-50 p-6 rounded-2xl shadow-md">
+          <h3 class="text-2xl font-bold mb-4">Main Purpose</h3>
+          <p class="text-lg leading-8">
+            To fit a curve instead of a straight line for better predictions.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-10 bg-yellow-100 p-6 rounded-2xl shadow-lg">
+        <h3 class="text-3xl font-bold mb-4 text-yellow-700">Real World Uses</h3>
+
+        <div class="grid md:grid-cols-3 gap-6 mt-6">
+          <div class="bg-white p-5 rounded-xl shadow">
+            <h4 class="text-xl font-bold mb-2">📈 Stock Prediction</h4>
+            <p>Stock prices move in curves.</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-xl shadow">
+            <h4 class="text-xl font-bold mb-2">🌡 Temperature Forecasting</h4>
+            <p>Temperature changes are non-linear.</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-xl shadow">
+            <h4 class="text-xl font-bold mb-2">💰 Salary Growth</h4>
+            <p>Experience vs salary creates growth curves.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Types -->
+  <section class="max-w-7xl mx-auto p-8 fade-in">
+    <div class="bg-white rounded-3xl shadow-xl p-8">
+      <h2 class="text-4xl font-bold text-purple-700 mb-8">5. Types of Polynomial Regression</h2>
+
+      <div class="grid md:grid-cols-3 gap-8">
+
+        <div class="bg-gradient-to-b from-blue-100 to-blue-50 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300">
+          <h3 class="text-2xl font-bold mb-4 text-blue-700">Degree 1</h3>
+          <p class="text-lg mb-4">Linear Shape</p>
+          <div class="h-40 flex items-center justify-center">
+            <svg width="200" height="120">
+              <line x1="20" y1="100" x2="180" y2="20" stroke="blue" stroke-width="4" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-b from-green-100 to-green-50 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300">
+          <h3 class="text-2xl font-bold mb-4 text-green-700">Degree 2</h3>
+          <p class="text-lg mb-4">Quadratic Curve</p>
+          <div class="h-40 flex items-center justify-center">
+            <svg width="200" height="120">
+              <path d="M20 100 Q100 10 180 100" stroke="green" stroke-width="4" fill="transparent" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="bg-gradient-to-b from-pink-100 to-pink-50 p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300">
+          <h3 class="text-2xl font-bold mb-4 text-pink-700">Degree 3</h3>
+          <p class="text-lg mb-4">Cubic Curve</p>
+          <div class="h-40 flex items-center justify-center">
+            <svg width="200" height="120">
+              <path d="M20 90 C60 10, 140 140, 180 30" stroke="deeppink" stroke-width="4" fill="transparent" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Workflow -->
+  <section class="max-w-7xl mx-auto p-8 fade-in">
+    <div class="bg-white rounded-3xl shadow-xl p-8">
+      <h2 class="text-4xl font-bold text-orange-700 mb-8">6. Polynomial Regression Workflow</h2>
+
+      <div class="grid md:grid-cols-6 gap-4 text-center">
+
+        <div class="bg-orange-100 p-5 rounded-xl shadow-lg hover:scale-105 transition">
+          <h3 class="font-bold text-lg">Business Problem</h3>
+        </div>
+
+        <div class="bg-orange-100 p-5 rounded-xl shadow-lg hover:scale-105 transition">
+          <h3 class="font-bold text-lg">Dataset</h3>
+        </div>
+
+        <div class="bg-orange-100 p-5 rounded-xl shadow-lg hover:scale-105 transition">
+          <h3 class="font-bold text-lg">Visualization</h3>
+        </div>
+
+        <div class="bg-orange-100 p-5 rounded-xl shadow-lg hover:scale-105 transition">
+          <h3 class="font-bold text-lg">Polynomial Features</h3>
+        </div>
+
+        <div class="bg-orange-100 p-5 rounded-xl shadow-lg hover:scale-105 transition">
+          <h3 class="font-bold text-lg">Train Model</h3>
+        </div>
+
+        <div class="bg-orange-100 p-5 rounded-xl shadow-lg hover:scale-105 transition">
+          <h3 class="font-bold text-lg">Prediction</h3>
+        </div>
+
+      </div>
+    </div>
+  </section>
+<!-- ===================== -->
+<!-- 7. Degree Selection -->
+<!-- ===================== -->
+
+<section class="max-w-7xl mx-auto p-8 fade-in">
+
+<div class="bg-white rounded-3xl shadow-xl p-8">
+
+<h2 class="text-4xl font-bold text-blue-700 mb-8">
+7. How To Select Degree ⭐
+</h2>
+
+<p class="text-xl text-gray-600 mb-8">
+
+Start Degree=1 →
+Train →
+Compare Train/Test →
+Stop at Best Test Score
+
+</p>
+
+<div class="grid md:grid-cols-4 gap-5">
+
+<div class="bg-red-100 p-6 rounded-xl shadow-lg">
+
+<h3 class="font-bold text-2xl">
+Degree 1
+</h3>
+
+<div class="text-6xl mt-5">
+📉
+</div>
+
+<p class="mt-4">
+
+Underfitting
+
+<br>
+
+High Bias
+
+</p>
+
+</div>
+
+
+
+<div class="bg-green-100 p-6 rounded-xl shadow-lg">
+
+<h3 class="font-bold text-2xl">
+Degree 2
+</h3>
+
+<div class="text-6xl mt-5">
+📈
+</div>
+
+<p class="mt-4">
+
+Best Fit
+
+</p>
+
+</div>
+
+
+
+<div class="bg-green-50 p-6 rounded-xl shadow-lg">
+
+<h3 class="font-bold text-2xl">
+Degree 3
+</h3>
+
+<div class="text-6xl mt-5">
+📊
+</div>
+
+<p class="mt-4">
+
+Good Fit
+
+</p>
+
+</div>
+
+
+
+<div class="bg-yellow-100 p-6 rounded-xl shadow-lg">
+
+<h3 class="font-bold text-2xl">
+Degree 7
+</h3>
+
+<div class="text-6xl mt-5">
+〰️
+</div>
+
+<p class="mt-4">
+
+Overfitting
+
+</p>
+
+</div>
+
+</div>
+
+
+
+<div class="overflow-x-auto mt-10">
+
+<table class="w-full text-center">
+
+<thead>
+
+<tr class="bg-blue-600 text-white">
+
+<th class="p-4">Degree</th>
+
+<th>Train</th>
+
+<th>Test</th>
+
+<th>Decision</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr class="border">
+
+<td class="p-4">1</td>
+
+<td>70%</td>
+
+<td>68%</td>
+
+<td>Underfit</td>
+
+</tr>
+
+<tr class="border">
+
+<td class="p-4">2</td>
+
+<td>91%</td>
+
+<td>89%</td>
+
+<td>Best</td>
+
+</tr>
+
+<tr class="border">
+
+<td class="p-4">3</td>
+
+<td>95%</td>
+
+<td>91%</td>
+
+<td>Good</td>
+
+</tr>
+
+<tr class="border">
+
+<td class="p-4">7</td>
+
+<td>100%</td>
+
+<td>60%</td>
+
+<td>Overfit</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+
+<!-- ===================== -->
+<!-- 8. PolynomialFeatures -->
+<!-- ===================== -->
+
+<section class="max-w-7xl mx-auto p-8 fade-in">
+
+<div class="bg-white rounded-3xl shadow-xl p-8">
+
+<h2 class="text-4xl font-bold text-purple-700 mb-8">
+
+8. PolynomialFeatures Concept
+
+</h2>
+
+<div class="grid md:grid-cols-3 gap-5">
+
+<div class="bg-purple-100 p-6 rounded-xl">
+
+<h3>X</h3>
+
+<div class="text-5xl mt-4">
+
+2
+
+</div>
+
+</div>
+
+
+
+<div class="bg-purple-100 p-6 rounded-xl">
+
+<h3>X²</h3>
+
+<div class="text-5xl mt-4">
+
+4
+
+</div>
+
+</div>
+
+
+
+<div class="bg-purple-100 p-6 rounded-xl">
+
+<h3>Output</h3>
+
+<div class="text-3xl mt-4">
+
+[1,2,4]
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+
+<!-- ===================== -->
+<!-- 9. Evaluation -->
+<!-- ===================== -->
+
+<section class="max-w-7xl mx-auto p-8 fade-in">
+
+<div class="bg-white rounded-3xl shadow-xl p-8">
+
+<h2 class="text-4xl font-bold text-green-700 mb-8">
+
+9. Evaluation Metrics
+
+</h2>
+
+<div class="grid md:grid-cols-4 gap-5">
+
+<div class="bg-green-100 p-6 rounded-xl">
+MAE ↓
+</div>
+
+<div class="bg-green-100 p-6 rounded-xl">
+MSE ↓
+</div>
+
+<div class="bg-green-100 p-6 rounded-xl">
+RMSE ↓
+</div>
+
+<div class="bg-green-100 p-6 rounded-xl">
+R² ↑
+</div>
+
+</div>
+
+</div>
+<div class="bg-orange-50 p-5 rounded-xl mt-6">
+
+Train = 80%
+
+<br>
+
+Test = 20%
+
+</div>
+</section>
+<section class="max-w-7xl mx-auto p-8 fade-in">
+
+<div class="bg-white rounded-3xl shadow-xl p-8">
+
+<h2 class="text-4xl font-bold text-cyan-700">
+
+10. Prediction Example
+
+</h2>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<div class="bg-cyan-100 p-6 rounded-xl">
+
+Experience = 8
+
+</div>
+
+<div class="bg-green-100 p-6 rounded-xl">
+
+Predicted Salary = 42 LPA
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+  <section class="max-w-7xl mx-auto p-8 fade-in">
+    <div class="bg-white rounded-3xl shadow-xl p-8">
+      <h2 class="text-4xl font-bold text-purple-700 mb-8">
+
+  <!-- Python Code -->
+  <section class="max-w-7xl mx-auto p-8 fade-in">
+    <div class="bg-gray-900 text-green-400 rounded-3xl shadow-xl p-8 overflow-x-auto">
+      <h2 class="text-4xl font-bold mb-8 text-white">7. Python Practical Code</h2>
+
+<pre class="text-lg leading-8">
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+import pandas as pd
+
+# Dataset
+X = [[1],[2],[3],[4],[5],[6],[7]]
+y = [3,5,7,10,15,22,32]
+
+# Convert into Polynomial Features
+poly = PolynomialFeatures(degree=2)
+X_poly = poly.fit_transform(X)
+
+# Train Model
+model = LinearRegression()
+model.fit(X_poly, y)
+
+# Prediction
+prediction = model.predict(poly.transform([[8]]))
+
+print(prediction)
+</pre>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white text-center p-8 mt-10">
+    <h2 class="text-3xl font-bold mb-3">Polynomial Regression Complete Teaching Module</h2>
+    <p class="text-lg">Business Problem → Linear Failure → Polynomial Solution → Graph → Workflow → Code</p>
+  </footer>
+
+  <script>
+    // Linear Regression Style Chart
+    const linearCtx = document.getElementById('linearChart');
+
+    new Chart(linearCtx, {
+      type: 'scatter',
+      data: {
+        datasets: [
+          {
+            label: 'Actual Data',
+            data: [
+              {x:1,y:3},
+              {x:2,y:5},
+              {x:3,y:7},
+              {x:4,y:10},
+              {x:5,y:15},
+              {x:6,y:22},
+              {x:7,y:32},
+            ],
+            backgroundColor: 'red'
+          },
+          {
+            type:'line',
+            label:'Linear Line',
+            data:[
+              {x:1,y:4},
+              {x:7,y:26}
+            ],
+            borderColor:'blue',
+            borderWidth:3,
+            fill:false
+          }
+        ]
+      }
+    });
+
+    // Polynomial Curve Chart
+    const polyCtx = document.getElementById('polyChart');
+
+    new Chart(polyCtx, {
+      type: 'scatter',
+      data: {
+        datasets: [
+          {
+            label: 'Actual Data',
+            data: [
+              {x:1,y:3},
+              {x:2,y:5},
+              {x:3,y:7},
+              {x:4,y:10},
+              {x:5,y:15},
+              {x:6,y:22},
+              {x:7,y:32},
+            ],
+            backgroundColor: 'green'
+          },
+          {
+            type:'line',
+            label:'Polynomial Curve',
+            data:[
+              {x:1,y:3},
+              {x:2,y:5},
+              {x:3,y:7},
+              {x:4,y:10},
+              {x:5,y:15},
+              {x:6,y:22},
+              {x:7,y:32},
+            ],
+            borderColor:'purple',
+            borderWidth:4,
+            tension:0.4,
+            fill:false
+          }
+        ]
+      }
+    });
+  </script>
+
+</body>
+</html>
